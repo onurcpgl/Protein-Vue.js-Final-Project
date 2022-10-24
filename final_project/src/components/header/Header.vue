@@ -1,22 +1,33 @@
 <script setup>
+import { ref } from "vue";
+const emits = defineEmits(["gameStatus"]);
+const gameIsActive = ref(false);
+
+function gameAction() {
+    gameIsActive.value = !gameIsActive.value;
+    emits("gameStatus",gameIsActive.value);
+}
 
 </script>
 
 <template>
-    <div class="container">
+    <div class="header_container">
         
         <div class="title">
             Merhaba yarışa hoşgeldiniz.
         </div>
         <div class="start_btn">
-            <button class="btn">START</button>
+            <button :class="{btn_start : gameIsActive, btn_stop : !gameIsActive}" 
+            @click="gameAction">
+            {{gameIsActive ? "START" : "STOP"}}
+        </button>
         </div>
     </div>
 </template>
 
 
-<style scoped >
-.container{
+<style scoped>
+.header_container{
     display: flex;
     justify-content: space-between;
     margin: 50px;
@@ -37,12 +48,21 @@
     display: flex;
     justify-content: right;
 }
-.btn{
+.btn_start{
     margin: 50px;
     width: 255px;
     height: 55px;
     font-size: 25px;
-    background-color: coral;
+    background-color: rgb(11, 248, 11);
+    border-radius: 25px;
+    
+}
+.btn_stop{
+    margin: 50px;
+    width: 255px;
+    height: 55px;
+    font-size: 25px;
+    background-color: red;
     border-radius: 25px;
     
 }

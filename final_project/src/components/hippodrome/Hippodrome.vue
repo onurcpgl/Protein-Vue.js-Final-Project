@@ -1,91 +1,109 @@
-<script setup>              
-import { ref,onMounted } from "vue";
-const horseSpeed= ref({
-    at1:68,
-    at2:66,
-    at3:69,
-    at4:62,
-    at5:68,
-    at6:64
-});
+<script setup>          
+import { ref,onMounted, onUpdated,watch} from "vue";
+const props = defineProps(["gameStatusProp"]);
 
-const horseMoov = ref({
-    at1:0,
-    at2:0,
-    at3:0,
-    at4:0,
-    at5:0,
-    at6:0
-})
-
-onMounted(() => {
-   const at1 =  setInterval(() => {
-        horseMoov.value.at1 = horseMoov.value.at1+25;
-    },horseSpeed.value.at1)
-
-    const at2 =  setInterval(() => {
-        horseMoov.value.at2 = horseMoov.value.at2+25;
-    },horseSpeed.value.at2)
-
-    const at3 =  setInterval(() => {
-        horseMoov.value.at3 = horseMoov.value.at3+25;
-    },horseSpeed.value.at3)
-
-    const at4 =  setInterval(() => {
-        horseMoov.value.at4 = horseMoov.value.at4+25;
-    },horseSpeed.value.at4)
-
-    const at5 =  setInterval(() => {
-        horseMoov.value.at5 = horseMoov.value.at5+25;
-    },horseSpeed.value.at5)
-
-    const at6 =  setInterval(() => {
-        horseMoov.value.at6 = horseMoov.value.at6+25;
-    },horseSpeed.value.at6)
+const data = ref([
+    {
+        id:1,
+        name:"Devirhan",
+        speed:0,
+    },
+    {
+        id:2,
+        name:"Odin",
+        speed:500,
+    },
+    {
+        id:3,
+        name:"Sunday",
+        speed:0,
+    },
+    {
+        id:4,
+        name:"Timurhan",
+        speed:0,
+    },
+    {
+        id:5,
+        name:"Tansel",
+        speed:0,
+    },
+    {
+        id:6,
+        name:"Yelhan",
+        speed:0,
+    }
+])
 
 
 
-   const myTimeout = setTimeout(()=>{
-        clearTimeout(myTimeout);
-        clearInterval(at1);
-        clearInterval(at2);
-        clearInterval(at3);
-        clearInterval(at4);
-        clearInterval(at5);
-        clearInterval(at6);
-   },5000);
-   
+const firstHorse = ref([]);
+
+
+
+function randomHorseSpeed(horse) {
+    
+    const horseSpeed = setInterval(() => {
+        if(horse.speed < 1100)
+        {
+            horse.speed = horse.speed+(Math.floor(Math.random() * 10)*10);
+        }
+        else
+        {
+            firstHorse.value.push(horse.name);
+            clearInterval(horseSpeed);
+        }
+    },100)
+}
+
+
+watch(props,() => {
+    if(props.gameStatusProp){
+        randomHorseSpeed(data.value[0]);
+        randomHorseSpeed(data.value[1]);
+        randomHorseSpeed(data.value[2]);
+        randomHorseSpeed(data.value[3]);
+        randomHorseSpeed(data.value[4]);
+        randomHorseSpeed(data.value[5]);
+    }
 })
 
 
 </script>
 
 <template>
- <div class="container">
-    <div class="at" v-bind:style="[{left: horseMoov.at1+ 'px'}]">
+    <div style="background-color:white; font-size: 30px;">
+    Kazanan at{{firstHorse[0]}}
+    </div>
+ <div class="container" id="att">
+    <div class="at" v-bind:style="[{left: data[0].speed+ 'px'}]" >
        <img src="https://galeri14.uludagsozluk.com/760/gunun-gif-i_1299032.gif" style="width:120px" />
     </div>
-    <div class="at" v-bind:style="[{left: horseMoov.at2 + 'px'}]">
+    <div class="at" v-bind:style="[{left: data[1].speed + 'px'}]">
         <img src="https://galeri14.uludagsozluk.com/760/gunun-gif-i_1299032.gif" style="width:120px" />
     </div>
-    <div class="at" v-bind:style="[{left: horseMoov.at3 + 'px'}]">
+    <div class="at" v-bind:style="[{left: data[2].speed + 'px'}]">
         <img src="https://galeri14.uludagsozluk.com/760/gunun-gif-i_1299032.gif" style="width:120px" />
     </div>
-    <div class="at" v-bind:style="[{left: horseMoov.at4 + 'px'}]">
+    <div class="at" v-bind:style="[{left: data[3].speed + 'px'}]">
         <img src="https://galeri14.uludagsozluk.com/760/gunun-gif-i_1299032.gif" style="width:120px" />
     </div>
-    <div class="at" v-bind:style="[{left: horseMoov.at5 + 'px'}]">
+    <div class="at" v-bind:style="[{left: data[4].speed + 'px'}]">
         <img src="https://galeri14.uludagsozluk.com/760/gunun-gif-i_1299032.gif" style="width:120px" />
     </div>
-    <div class="at" v-bind:style="[{left: horseMoov.at6 + 'px'}]">
+    <div class="at" v-bind:style="[{left: data[5].speed + 'px'}]">
         <img src="https://galeri14.uludagsozluk.com/760/gunun-gif-i_1299032.gif" style="width:120px" />
     </div>
  </div>
+
+
 </template>
 
 <style scoped>
 .container{
-    background-color: red;
+    background-image: url("../../../public/green.png");
+    background-repeat: no-repeat;
+    background-size: cover;
     border: 1px solid black;
     display: flex;
     flex-direction: column;
@@ -95,5 +113,7 @@ onMounted(() => {
     position: relative;
     color:white;
     width: 25px;
+    animation-duration: 4s;
+
 }
 </style>
