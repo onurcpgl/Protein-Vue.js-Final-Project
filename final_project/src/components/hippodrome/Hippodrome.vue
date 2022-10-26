@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { start } from "repl";
+import { ref, watch, onMounted, defineAsyncComponent } from "vue";
 import Result from "../result/Result.vue";
 const raceStatus = ref(true);
 const firstHorse = ref([]);
@@ -47,31 +48,32 @@ function retryGame(params) {
   startGame();
 }
 
+
 function startGame() {
-  randomHorseSpeed(data.value[0]);
-  randomHorseSpeed(data.value[1]);
-  randomHorseSpeed(data.value[2]);
-  randomHorseSpeed(data.value[3]);
-  randomHorseSpeed(data.value[4]);
-  randomHorseSpeed(data.value[5]);
-}
+      randomHorseSpeed(data.value[0]);
+      randomHorseSpeed(data.value[1]);
+      randomHorseSpeed(data.value[2]);
+      randomHorseSpeed(data.value[3]);
+      randomHorseSpeed(data.value[4]);
+      randomHorseSpeed(data.value[5]);
+    }
+
 
 function randomHorseSpeed(horse) {
   const horseSpeed = setInterval(() => {
-    if (horse.speed < 1050) {
+    if (horse.speed < screen.width-200) {
       horse.speed = horse.speed + Math.floor(Math.random() * 100);
     } else {
-      firstHorse.value.push(`id: ${horse.id} name:${horse.name}`);
+      firstHorse.value.push(horse.name);
+     
       clearInterval(horseSpeed);
       //yeri doğru değil.
       setTimeout(() => {
         raceStatus.value = false; 
-      }, 1200);
+      }, 2000);
     }
   }, 100);
-  
   horse.speed = 0;
-  
 }
 
 watch(raceStatus, () => {});
@@ -80,12 +82,13 @@ watch(raceStatus, () => {});
 <template>
   <template v-if="raceStatus">
     <div style="background-color: white; font-size: 30px">
-      Kazanan {{firstHorse.name }} numaralı at.
+      Kazanan {{firstHorse[0] }} numaralı at.
     </div>
 
     <div class="container" id="att">
-      <div class="at" v-bind:style="[{ left: data[0].speed + 'px' }]">
+      <div class="at"  v-bind:style="[{ left: data[0].speed + 'px' }]">
         <img
+          id="horse"
           src="https://galeri14.uludagsozluk.com/760/gunun-gif-i_1299032.gif"
           style="width: 120px"
         />
@@ -135,12 +138,11 @@ watch(raceStatus, () => {});
   border: 1px solid black;
   display: flex;
   flex-direction: column;
-  margin: 50px;
+
 }
 .at {
   position: relative;
   color: white;
-  width: 25px;
-  animation-duration: 4s;
+  animation-duration: 2s;
 }
 </style>

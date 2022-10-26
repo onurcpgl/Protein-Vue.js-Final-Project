@@ -10,13 +10,13 @@ function resultOff(params) {
 <template>
     <div class="modal_container">
         <div class="modal">
-            <ul>
+            <ol>
                 <li v-for="item in props.raceResult">
                     {{item}}
                 </li>
-            </ul>
+            </ol>
+            <button class="retry_button" @click="resultOff" >Retry Game</button>
         </div>
-        <button class="button" @click="resultOff" >Tekrar başlat</button>
     </div>
 </template>
 
@@ -26,30 +26,43 @@ function resultOff(params) {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: auto;
-    height: auto;
-    flex-direction: column;
-    z-index: 99;
+    margin: 10%;
 }
 .modal{
-    background-color: orange;
-    width: 800px;
-    height: 500px;
+    background-color: #d7f4e4;
+    border-radius: 15px;
+    width: 500px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction:column;
+}
+.modal > ol{
+    font-size: 25px;
+     width: 80%;
+}
+.modal > ol> li{
+    background-color: rgb(117, 255, 117);
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+   
+}
+.retry_button{
+    border-radius: 18px;
+    background: linear-gradient(to bottom, #00cc00 0%, #ccff33 100%);
+    font-size: 25px;
     margin: 10px;
     padding: 10px;
+    width: 65%;
+    height: 20%;
 }
-.button{
-    width: 250px;
-    height: 50px;
-    border-radius: 15px;
-    margin: 10px;   
-    background-color: rgb(193, 248, 248);
-}
-.button:hover{
-    width: 250px;
-    height: 50px;
-    border-radius: 15px;
-    margin: 10px;
-    background-color: azure; 
+.retry_button:hover{
+    border-radius: 18px;
+    background: linear-gradient(to bottom, #00cc00 0%, #ccff33 80%);
+    width: 65%;
+    height: 20%; 
 }
 </style>

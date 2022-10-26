@@ -19,7 +19,7 @@ function startIsActiveValue(value) {
   <template v-else>
     <Loading></Loading>
   </template>
- 
+
 </template>
 
 <style scoped>
