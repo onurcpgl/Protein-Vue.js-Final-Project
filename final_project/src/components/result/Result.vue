@@ -1,12 +1,22 @@
 <script setup>
 
+const emits = defineEmits(["resultPageOff"]);
+const props = defineProps(["raceResult"]);
+function resultOff(params) {
+    emits("resultPageOff",true);
+}
 </script>
+
 <template>
     <div class="modal_container">
         <div class="modal">
-            sonuclar
+            <ul>
+                <li v-for="item in props.raceResult">
+                    {{item}}
+                </li>
+            </ul>
         </div>
-        <button class="button"  >Tekrar başlat</button>
+        <button class="button" @click="resultOff" >Tekrar başlat</button>
     </div>
 </template>
 
