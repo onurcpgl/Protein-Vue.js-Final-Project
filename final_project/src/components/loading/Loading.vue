@@ -13,7 +13,7 @@ onMounted(() => {
     }else{
         timer.value = timer.value -1;
     }
-   },1000)
+   },100)
 });
 
 </script>

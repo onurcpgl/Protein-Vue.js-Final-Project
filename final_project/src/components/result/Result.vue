@@ -1,7 +1,6 @@
 <script setup>
-
 const emits = defineEmits(["resultPageOff"]);
-const props = defineProps(["raceResult"]);
+const props = defineProps(["raceResultList"]);
 function resultOff(params) {
     emits("resultPageOff",true);
 }
@@ -9,10 +8,12 @@ function resultOff(params) {
 
 <template>
     <div class="modal_container">
+    
         <div class="modal">
+            <li class="title">İsim  Kulvar no</li>
             <ol>
-                <li v-for="item in props.raceResult">
-                    {{item}}
+                <li v-for="item in props.raceResultList">
+                    {{item.name}} Kulvar no: {{item.id}}
                 </li>
             </ol>
             <button class="retry_button" @click="resultOff" >Retry Game</button>
@@ -21,7 +22,6 @@ function resultOff(params) {
 </template>
 
 <style scoped>
-
 .modal_container{
     display: flex;
     justify-content: center;
@@ -37,6 +37,16 @@ function resultOff(params) {
     justify-content: center;
     align-items: center;
     flex-direction:column;
+}
+.title{
+    list-style: none;
+    margin-top: 5px;
+    background-color: rgb(117, 255, 117);
+    font-size: 25px;
+    width: 80%;
+    text-align: center;
+    margin-left: 25px;
+    border-radius: 15px;
 }
 .modal > ol{
     font-size: 25px;

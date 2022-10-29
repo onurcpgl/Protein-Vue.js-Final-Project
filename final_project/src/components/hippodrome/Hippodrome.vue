@@ -1,148 +1,200 @@
 <script setup>
-import { start } from "repl";
-import { ref, watch, onMounted, defineAsyncComponent } from "vue";
+import { ref, onMounted } from "vue";
 import Result from "../result/Result.vue";
-const raceStatus = ref(true);
-const firstHorse = ref([]);
-
+const resultOff = ref(true);
 const data = ref([
   {
     id: 1,
     name: "Devirhan",
     speed: 0,
+    img: "h1",
   },
   {
     id: 2,
     name: "Odin",
     speed: 0,
+    img: "h2",
   },
   {
     id: 3,
     name: "Sunday",
     speed: 0,
+    img: "h3",
   },
   {
     id: 4,
     name: "Timurhan",
     speed: 0,
+    img: "h4",
   },
   {
     id: 5,
     name: "Tansel",
     speed: 0,
+    img: "h5",
   },
   {
     id: 6,
     name: "Yelhan",
     speed: 0,
+    img: "h6",
   },
 ]);
 
+function raceRetry(val) {
+  resultOff.value = val;
+  controlResultList.value = [];
+  // Önceki yarışta atanan hızları siliyoruz.
+  for (let i = 0; i < 6; i++) {
+    data.value[i].speed = 0;
+  }
+  startRace();
+}
 onMounted(() => {
-  startGame();
+  setTimeout(() => {
+    startRace();
+  }, 1000);
 });
 
-function retryGame(params) {
-  raceStatus.value = params;
-  firstHorse.value = [];
-  startGame();
+//Random değerleri bu fonksiyondan alıyoruz.
+function random(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
+const announcer = ref();
+const raceResult = ref();
+const horseDom = ref();
+const invisibleFinal = ref();
+const final = ref();
+const activeList = ref([]);
+const controlResultList = ref([]);
+
+
+// Yarışı başlatan fonksiyon.
+function startRace() {
+  const raceStartTimer = setInterval(() => {
+    
+    for (let i = 0; i < horseDom._rawValue.length; i++) {
+      // Atığın ilerledikçe aldığını toplam mesafe.
+      let horseWidht = parseInt(horseDom._rawValue[i].style.left.split("px")[0]) + horseDom._rawValue[i].width;
+      
+      console.log(horseDom._rawValue[i].style.left);
+      // Yarışın anlık sonucu alıp sıralayan işlemler.
+      data.value[i].speed = horseWidht;
+      activeList.value = [...data.value];
+  
+      if (data.value[i].speed <= final._rawValue.offsetLeft) {
+        raceResult.value = activeList.value.sort((a, b) => {
+          return b.speed - a.speed;
+        });
+      }
+      
+      // Canlı yorum ekranına değerleri burada veriyoruz.
+      announcer.value = `Yarışı ${raceResult.value[0].id}. kulvardaki ${raceResult.value[0].name} önde götürüyor.`;
+
+      // Atların hepsinin çizgiyi geçmesini bekleyen koşulları sonlandıran if blogu.
+      if (data.value[i].speed > invisibleFinal._rawValue.offsetLeft) {
+        if (!controlResultList.value.some((x) => x.id == data.value[i].id)) {
+          controlResultList.value.push(data.value[i]);
+          if (controlResultList.value.length == 6) {
+            clearInterval(raceStartTimer);
+            setTimeout(() => {
+              resultOff.value=false;
+            },1000)
+          }
+        }
+      }
+
+      // Atların yarışı bitirdikten sonra ilerlemesini sonlandıran koşul.
+      if (!controlResultList.value.some((x) => x.id == data.value[i].id)) 
+      {
+        horseDom._rawValue[i].style.left = parseInt(horseDom._rawValue[i].style.left.split("px")[0]) + random(1, 10) + "px";
+      }
+    }
+  }, 10);
+}
+
+function imageSrc(img) {
+  return new URL(`../../assets/horse/${img}.gif`, import.meta.url).href;
 }
 
 
-function startGame() {
-      randomHorseSpeed(data.value[0]);
-      randomHorseSpeed(data.value[1]);
-      randomHorseSpeed(data.value[2]);
-      randomHorseSpeed(data.value[3]);
-      randomHorseSpeed(data.value[4]);
-      randomHorseSpeed(data.value[5]);
-    }
-
-
-function randomHorseSpeed(horse) {
-  const horseSpeed = setInterval(() => {
-    if (horse.speed < screen.width-200) {
-      horse.speed = horse.speed + Math.floor(Math.random() * 100);
-    } else {
-      firstHorse.value.push(horse.name);
-     
-      clearInterval(horseSpeed);
-      //yeri doğru değil.
-      setTimeout(() => {
-        raceStatus.value = false; 
-      }, 2000);
-    }
-  }, 100);
-  horse.speed = 0;
-}
-
-watch(raceStatus, () => {});
 </script>
 
 <template>
-  <template v-if="raceStatus">
-    <div style="background-color: white; font-size: 30px">
-      Kazanan {{firstHorse[0] }} numaralı at.
+  
+  <template v-if="resultOff">
+    <div class="hippodrome_ground">
+      <div class="container">
+        <div class="horse" v-for="horse in data">
+          <img ref="horseDom" :src="imageSrc(horse.img)" style="left: 1px" />
+        </div>
+      </div>
+      <div ref="final" class="final"></div>
+      <div ref="invisibleFinal" class="invisibleFinal"></div>
     </div>
 
-    <div class="container" id="att">
-      <div class="at"  v-bind:style="[{ left: data[0].speed + 'px' }]">
-        <img
-          id="horse"
-          src="https://galeri14.uludagsozluk.com/760/gunun-gif-i_1299032.gif"
-          style="width: 120px"
-        />
-      </div>
-      <div class="at" v-bind:style="[{ left: data[1].speed + 'px' }]">
-        <img
-          src="https://galeri14.uludagsozluk.com/760/gunun-gif-i_1299032.gif"
-          style="width: 120px"
-        />
-      </div>
-      <div class="at" v-bind:style="[{ left: data[2].speed + 'px' }]">
-        <img
-          src="https://galeri14.uludagsozluk.com/760/gunun-gif-i_1299032.gif"
-          style="width: 120px"
-        />
-      </div>
-      <div class="at" v-bind:style="[{ left: data[3].speed + 'px' }]">
-        <img
-          src="https://galeri14.uludagsozluk.com/760/gunun-gif-i_1299032.gif"
-          style="width: 120px"
-        />
-      </div>
-      <div class="at" v-bind:style="[{ left: data[4].speed + 'px' }]">
-        <img
-          src="https://galeri14.uludagsozluk.com/760/gunun-gif-i_1299032.gif"
-          style="width: 120px"
-        />
-      </div>
-      <div class="at" v-bind:style="[{ left: data[5].speed + 'px' }]">
-        <img
-          src="https://galeri14.uludagsozluk.com/760/gunun-gif-i_1299032.gif"
-          style="width: 120px"
-        />
-      </div>
+    <div class="list">
+      <p>{{ announcer }}</p>
+      <ol>
+        <li v-for="item in raceResult" :key="item">
+          {{ item.name }} 
+        </li>
+      </ol>
     </div>
   </template>
   <template v-else>
-    <Result @resultPageOff="retryGame"  :raceResult="firstHorse"></Result>
+    <Result @resultPageOff="raceRetry" :raceResultList="raceResult"></Result>
   </template>
 </template>
 
 <style scoped>
 .container {
-  background-image: url("../../../public/green.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  border: 1px solid black;
-  display: flex;
-  flex-direction: column;
-
+  display: grid;
 }
-.at {
-  position: relative;
-  color: white;
-  animation-duration: 2s;
+img {
+  width: 200px;
+  position: absolute;
+  margin-top: 10px;
+}
+.horse {
+  margin-top: 50px;
+}
+.list{
+  margin-top: 10%;
+  background-color: orange;
+  margin-left: 10%;
+  margin-right: 10%;
+  border-radius: 15px;
+}
+.list p{
+  text-align: center;
+  font-size: 25px;
+}
+.list ul{
+  margin: 10px;
+}
+li{
+  padding: 10px;
+  font-size: 30px;
+}
+.final {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: black;
+  left: 90%;
+  margin-right: 20px;
+  height: 50%;
+  margin-top: 10px;
+}
+
+.invisibleFinal {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  left: 99%;
+  margin-right: 20px;
 }
 </style>
