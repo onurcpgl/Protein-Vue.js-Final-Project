@@ -1,100 +1,60 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import Result from "../result/Result.vue";
+import { useHorseStore } from "../../stores/horseRace";
+const horseStore = useHorseStore();
+
 const resultOff = ref(true);
-const data = ref([
-  {
-    id: 1,
-    name: "Devirhan",
-    speed: 0,
-    img: "h1",
-  },
-  {
-    id: 2,
-    name: "Odin",
-    speed: 0,
-    img: "h2",
-  },
-  {
-    id: 3,
-    name: "Sunday",
-    speed: 0,
-    img: "h3",
-  },
-  {
-    id: 4,
-    name: "Timurhan",
-    speed: 0,
-    img: "h4",
-  },
-  {
-    id: 5,
-    name: "Tansel",
-    speed: 0,
-    img: "h5",
-  },
-  {
-    id: 6,
-    name: "Yelhan",
-    speed: 0,
-    img: "h6",
-  },
-]);
-
-function raceRetry(val) {
-  resultOff.value = val;
-  controlResultList.value = [];
-  // Önceki yarışta atanan hızları siliyoruz.
-  for (let i = 0; i < 6; i++) {
-    data.value[i].speed = 0;
-  }
-  startRace();
-}
-onMounted(() => {
-  setTimeout(() => {
-    startRace();
-  }, 1000);
-});
-
-//Random değerleri bu fonksiyondan alıyoruz.
-function random(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
-}
 const announcer = ref();
-const raceResult = ref();
 const horseDom = ref();
 const invisibleFinal = ref();
 const final = ref();
 const activeList = ref([]);
 const controlResultList = ref([]);
 
+function raceRetry(value) {
+  resultOff.value = value;
+  controlResultList.value = [];
+  // Önceki yarışta atanan hızları siliyoruz.
+  for (let i = 0; i < 6; i++) {
+    horseStore.horseList[i].speed = 0;
+  }
+  setTimeout(() => {
+    startRace();
+  }, 1000);
+}
+
+onMounted(() => {
+  setTimeout(() => {
+    startRace();
+  }, 1000);
+});
 
 // Yarışı başlatan fonksiyon.
 function startRace() {
   const raceStartTimer = setInterval(() => {
     
     for (let i = 0; i < horseDom._rawValue.length; i++) {
-      // Atığın ilerledikçe aldığını toplam mesafe.
+      // Atın ilerledikçe aldığını mesafe.
       let horseWidht = parseInt(horseDom._rawValue[i].style.left.split("px")[0]) + horseDom._rawValue[i].width;
       
-      console.log(horseDom._rawValue[i].style.left);
+      
       // Yarışın anlık sonucu alıp sıralayan işlemler.
-      data.value[i].speed = horseWidht;
-      activeList.value = [...data.value];
-  
-      if (data.value[i].speed <= final._rawValue.offsetLeft) {
-        raceResult.value = activeList.value.sort((a, b) => {
+      horseStore.horseList[i].speed = horseWidht;
+      activeList.value = [...horseStore.horseList];
+      if (horseStore.horseList[i].speed <= final._rawValue.offsetLeft) {
+        horseStore.raceResultt = activeList.value.sort((a, b) => {
           return b.speed - a.speed;
         });
       }
       
       // Canlı yorum ekranına değerleri burada veriyoruz.
-      announcer.value = `Yarışı ${raceResult.value[0].id}. kulvardaki ${raceResult.value[0].name} önde götürüyor.`;
+      announcer.value = `Yarışı ${horseStore.raceResultt[0].id}. kulvardaki ${horseStore.raceResultt[0].name} önde götürüyor.`;
 
       // Atların hepsinin çizgiyi geçmesini bekleyen koşulları sonlandıran if blogu.
-      if (data.value[i].speed > invisibleFinal._rawValue.offsetLeft) {
-        if (!controlResultList.value.some((x) => x.id == data.value[i].id)) {
-          controlResultList.value.push(data.value[i]);
+      if (horseStore.horseList[i].speed > invisibleFinal._rawValue.offsetLeft) {
+        if (!controlResultList.value.some((x) => x.id == horseStore.horseList[i].id)) {
+          controlResultList.value.push(horseStore.horseList[i]);
           if (controlResultList.value.length == 6) {
             clearInterval(raceStartTimer);
             setTimeout(() => {
@@ -105,16 +65,12 @@ function startRace() {
       }
 
       // Atların yarışı bitirdikten sonra ilerlemesini sonlandıran koşul.
-      if (!controlResultList.value.some((x) => x.id == data.value[i].id)) 
+      if (!controlResultList.value.some((x) => x.id == horseStore.horseList[i].id)) 
       {
-        horseDom._rawValue[i].style.left = parseInt(horseDom._rawValue[i].style.left.split("px")[0]) + random(1, 10) + "px";
+        horseDom._rawValue[i].style.left = parseInt(horseDom._rawValue[i].style.left.split("px")[0]) + horseStore.random(1, 10) + "px";
       }
     }
   }, 10);
-}
-
-function imageSrc(img) {
-  return new URL(`../../assets/horse/${img}.gif`, import.meta.url).href;
 }
 
 
@@ -125,8 +81,8 @@ function imageSrc(img) {
   <template v-if="resultOff">
     <div class="hippodrome_ground">
       <div class="container">
-        <div class="horse" v-for="horse in data">
-          <img ref="horseDom" :src="imageSrc(horse.img)" style="left: 1px" />
+        <div class="horse" v-for="horse in horseStore.horseList">
+          <img ref="horseDom" :src="horseStore.imageSrc(horse.img)" style="left: 1px" />
         </div>
       </div>
       <div ref="final" class="final"></div>
@@ -136,14 +92,14 @@ function imageSrc(img) {
     <div class="list">
       <p>{{ announcer }}</p>
       <ol>
-        <li v-for="item in raceResult" :key="item">
+        <li v-for="item in horseStore.raceResultt" :key="item">
           {{ item.name }} 
         </li>
       </ol>
     </div>
   </template>
   <template v-else>
-    <Result @resultPageOff="raceRetry" :raceResultList="raceResult"></Result>
+    <Result @resultPageOff="raceRetry" ></Result>
   </template>
 </template>
 

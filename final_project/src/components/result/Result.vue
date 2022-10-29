@@ -1,7 +1,9 @@
 <script setup>
+import { useHorseStore } from "../../stores/horseRace";
 const emits = defineEmits(["resultPageOff"]);
-const props = defineProps(["raceResultList"]);
-function resultOff(params) {
+const horseStore = useHorseStore();
+
+function resultOff() {
     emits("resultPageOff",true);
 }
 </script>
@@ -12,7 +14,7 @@ function resultOff(params) {
         <div class="modal">
             <li class="title">İsim  Kulvar no</li>
             <ol>
-                <li v-for="item in props.raceResultList">
+                <li v-for="item in horseStore.raceResultt">
                     {{item.name}} Kulvar no: {{item.id}}
                 </li>
             </ol>

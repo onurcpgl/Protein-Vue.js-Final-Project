@@ -1,9 +1,11 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useHorseStore = defineStore('horseRace', () => {
-  const count = ref(0)
-  const data = ref([
+  //Yarış sonuçlarını tuttuğumuz listemiz.
+  const raceResultt = ref();
+  // Atlarımızın bilgilerinin olduğu referancımız.
+  const horseList = ref([
     {
       id: 1,
       name: "Devirhan",
@@ -42,10 +44,15 @@ export const useHorseStore = defineStore('horseRace', () => {
     },
   ]);
   
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
+  //Resimleri src'ye atmak için kullanılan fonksiyon.
+  function imageSrc(img) {
+    return new URL(`../assets/horse/${img}.gif`, import.meta.url).href;
   }
 
-  return { count, doubleCount, increment }
+ // Random fonksiyonu
+  function random(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+
+  return { raceResultt, random, horseList, imageSrc }
 })
