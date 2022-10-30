@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import Result from "../result/Result.vue";
 import { useHorseStore } from "../../stores/horseRace";
+import ActiveResult from "../activeResult/ActiveResult.vue";
 const horseStore = useHorseStore();
 
 const resultOff = ref(true);
@@ -25,9 +26,9 @@ function raceRetry(value) {
 }
 
 onMounted(() => {
-  setTimeout(() => {
+  
     startRace();
-  }, 1000);
+  
 });
 
 // Yarışı başlatan fonksiyon.
@@ -43,13 +44,13 @@ function startRace() {
       horseStore.horseList[i].speed = horseWidht;
       activeList.value = [...horseStore.horseList];
       if (horseStore.horseList[i].speed <= final._rawValue.offsetLeft) {
-        horseStore.raceResultt = activeList.value.sort((a, b) => {
+        horseStore.raceResult = activeList.value.sort((a, b) => {
           return b.speed - a.speed;
         });
       }
       
       // Canlı yorum ekranına değerleri burada veriyoruz.
-      announcer.value = `Yarışı ${horseStore.raceResultt[0].id}. kulvardaki ${horseStore.raceResultt[0].name} önde götürüyor.`;
+      announcer.value = `Yarışı ${horseStore.raceResult[0].id}. kulvardaki ${horseStore.raceResult[0].name} önde götürüyor.`;
 
       // Atların hepsinin çizgiyi geçmesini bekleyen koşulları sonlandıran if blogu.
       if (horseStore.horseList[i].speed > invisibleFinal._rawValue.offsetLeft) {
@@ -67,10 +68,10 @@ function startRace() {
       // Atların yarışı bitirdikten sonra ilerlemesini sonlandıran koşul.
       if (!controlResultList.value.some((x) => x.id == horseStore.horseList[i].id)) 
       {
-        horseDom._rawValue[i].style.left = parseInt(horseDom._rawValue[i].style.left.split("px")[0]) + horseStore.random(1, 10) + "px";
+        horseDom._rawValue[i].style.left = parseInt(horseDom._rawValue[i].style.left.split("px")[0]) + horseStore.random(1, 40) + "px";
       }
     }
-  }, 10);
+  }, 100);
 }
 
 
@@ -81,21 +82,23 @@ function startRace() {
   <template v-if="resultOff">
     <div class="hippodrome_ground">
       <div class="container">
-        <div class="horse" v-for="horse in horseStore.horseList">
-          <img ref="horseDom" :src="horseStore.imageSrc(horse.img)" style="left: 1px" />
-        </div>
+          <div class="horse" v-for="horse in horseStore.horseList">
+            <img ref="horseDom" :src="horseStore.imageSrc(horse.img)" style="left: 1px" />
+          
+          </div>
       </div>
       <div ref="final" class="final"></div>
       <div ref="invisibleFinal" class="invisibleFinal"></div>
     </div>
 
     <div class="list">
-      <p>{{ announcer }}</p>
-      <ol>
-        <li v-for="item in horseStore.raceResultt" :key="item">
+      <ActiveResult></ActiveResult>
+      <!-- <p>{{ announcer }}</p> -->
+      <!-- <ol>
+        <li v-for="item in horseStore.raceResult" :key="item">
           {{ item.name }} 
         </li>
-      </ol>
+      </ol> -->
     </div>
   </template>
   <template v-else>
@@ -104,35 +107,32 @@ function startRace() {
 </template>
 
 <style scoped>
+.hippodrome_ground{
+  background-image: url("../../assets/horse/ground.jpg");
+  height: 350px;
+}
 .container {
   display: grid;
 }
 img {
-  width: 200px;
+  width: 10%;
   position: absolute;
   margin-top: 10px;
 }
+
 .horse {
-  margin-top: 50px;
+  margin-top: 25px;
 }
 .list{
-  margin-top: 10%;
+  width: 80%;
+  height: 10%;
+  margin-top: 1%;
   background-color: orange;
   margin-left: 10%;
   margin-right: 10%;
   border-radius: 15px;
 }
-.list p{
-  text-align: center;
-  font-size: 25px;
-}
-.list ul{
-  margin: 10px;
-}
-li{
-  padding: 10px;
-  font-size: 30px;
-}
+
 .final {
   position: absolute;
   top: 0;
@@ -141,7 +141,7 @@ li{
   background-color: black;
   left: 90%;
   margin-right: 20px;
-  height: 50%;
+  height: 36%;
   margin-top: 10px;
 }
 

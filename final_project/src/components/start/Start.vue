@@ -1,6 +1,7 @@
 <script setup>
+import { useHorseStore } from "../../stores/horseRace";
 const emits = defineEmits(["start"]);
-
+const horseStore = useHorseStore();
 function startValue() {
     emits("start",true);
 }
@@ -8,47 +9,21 @@ function startValue() {
 </script>
 
 <template>
-    <div class="container">
-      <div class="game_start">
-        <h2 class="title">At yarışına hoşgeldiniz...</h2>
-        <button class="start_button" @click="startValue">START</button>
-      </div>
+    <div class="box">
+      <a href="#" class="block p-2 max-w-md w-1/2 text-center bg-slate-100 rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        <img :src="horseStore.imageSrc(horseStore.horseList[0].img)" />
+        <p class="text-2xl mb-5 p-5 font-normal text-gray-900 dark:text-white">Wellcome to horse racing</p>
+        <button  @click="startValue" type="button" class="text-white w-56 bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Start Game</button>
+    </a>  
     </div>
 </template>
 
 <style scoped>
-.container{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10%;
-}
-.game_start{
-    background-color: #d7f4e4;
-    border-radius: 15px;
-    width: 500px;
-    height: 250px;
+.box{
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction:column;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    margin: 10%;
 }
-.title{
-  margin: 10px;
-  padding: 10px;
-}
-.start_button{
-  border-radius: 18px;
-  background: linear-gradient(to bottom, #00cc00 0%, #ccff33 100%);
-  font-size: 25px;
-  width: 65%;
-  height: 20%;
-}
-.start_button:hover{
-  border-radius: 18px;
-  background: linear-gradient(to bottom, #00cc00 0%, #ccff33 80%);
-  width: 65%;
-  height: 20%;
-}
+
 </style>

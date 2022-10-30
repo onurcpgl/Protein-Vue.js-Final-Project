@@ -9,18 +9,39 @@ function resultOff() {
 </script>
 
 <template>
-    <div class="modal_container">
     
-        <div class="modal">
-            <li class="title">İsim  Kulvar no</li>
-            <ol>
-                <li v-for="item in horseStore.raceResultt">
-                    {{item.name}} Kulvar no: {{item.id}}
-                </li>
-            </ol>
-            <button class="retry_button" @click="resultOff" >Retry Game</button>
+
+
+
+<div class="modal_container">
+    <a href="#" class="block p-2 max-w-xl w-3/4 text-center bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="py-3 px-6">
+                            Horse Name
+                        </th>
+                        <th scope="col" class="py-3 px-6">
+                            Horse Lane
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700" v-for="horse in horseStore.raceResult">
+                        <th scope="row" class="px-8 font-medium text-gray-700 whitespace-nowrap dark:text-white">
+                            {{horse.name}} 
+                        </th>
+                        <td class="py-4 px-6">
+                            {{horse.id}}
+                        </td>              
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
+        <button @click="resultOff" type="button" class="text-gray-900 bg-gradient-to-r from-teal-200 to-lime-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4 focus:outline-none focus:ring-lime-200 dark:focus:ring-teal-700 font-medium rounded-lg text-xl px-5 py-2.5 text-center mt-5 mr-2 mb-2">Retry Game</button>
+    </a>    
+</div>
 </template>
 
 <style scoped>

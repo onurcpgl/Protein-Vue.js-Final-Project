@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 export const useHorseStore = defineStore('horseRace', () => {
   //Yarış sonuçlarını tuttuğumuz listemiz.
-  const raceResultt = ref();
+  const raceResult = ref();
   // Atlarımızın bilgilerinin olduğu referancımız.
   const horseList = ref([
     {
@@ -42,6 +42,18 @@ export const useHorseStore = defineStore('horseRace', () => {
       speed: 0,
       img: "h6",
     },
+    {
+      id: 7,
+      name: "Bozdağ",
+      speed: 0,
+      img: "h6",
+    },
+    {
+      id: 8,
+      name: "Ribella",
+      speed: 0,
+      img: "h6",
+    },
   ]);
   
   //Resimleri src'ye atmak için kullanılan fonksiyon.
@@ -54,5 +66,5 @@ export const useHorseStore = defineStore('horseRace', () => {
     return Math.floor(Math.random() * (max - min) + min);
   }
 
-  return { raceResultt, random, horseList, imageSrc }
+  return { raceResult, random, horseList, imageSrc }
 })
