@@ -55,7 +55,7 @@ export const useHorseStore = defineStore('horseRace', () => {
       img: "h6",
     },
   ]);
-  
+
   //Resimleri src'ye atmak için kullanılan fonksiyon.
   function imageSrc(img) {
     return new URL(`../assets/horse/${img}.gif`, import.meta.url).href;
@@ -68,3 +68,4 @@ export const useHorseStore = defineStore('horseRace', () => {
 
   return { raceResult, random, horseList, imageSrc }
 })
+

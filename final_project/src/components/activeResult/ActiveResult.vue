@@ -6,10 +6,10 @@ const horseStore = useHorseStore();
 <template>
 
 <div class=" overflow-x-auto relative shadow-md sm:rounded-xl" v-if="horseStore.raceResult">
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <table class=" w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 h-1">
             <tr>
-                <th scope="col" class="py-3 px-6">
+                <th scope="col" class="py-3 px-12">
                     Horse name
                 </th>
                 <th scope="col" class="py-3 px-6">
@@ -20,16 +20,16 @@ const horseStore = useHorseStore();
                 </th>
             </tr>
         </thead>
-        <tbody >
+        <tbody>
             <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700" v-for="horse in horseStore.raceResult">
-                <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" class="py-1 px-16 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {{horse.name}} 
                 </th>
-                <td class="py-4 px-6">
+                <td class="py-2 px-12">
                     {{horse.id}}
                 </td>
-                <td class="py-4 px-6">
-                    <img class="w-12" :src="horseStore.imageSrc(horse.img)"/>
+                <td class="py-2 px-12">
+                    <img class="w-11" :src="horseStore.imageSrc(horse.img)"/>
                 </td>               
             </tr>
         </tbody>

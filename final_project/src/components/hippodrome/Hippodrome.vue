@@ -26,9 +26,7 @@ function raceRetry(value) {
 }
 
 onMounted(() => {
-  
     startRace();
-  
 });
 
 // Yarışı başlatan fonksiyon.
@@ -56,10 +54,10 @@ function startRace() {
       if (horseStore.horseList[i].speed > invisibleFinal._rawValue.offsetLeft) {
         if (!controlResultList.value.some((x) => x.id == horseStore.horseList[i].id)) {
           controlResultList.value.push(horseStore.horseList[i]);
-          if (controlResultList.value.length == 6) {
+          if (controlResultList.value.length == horseStore.horseList.length) {
             clearInterval(raceStartTimer);
             setTimeout(() => {
-              resultOff.value=false;
+              resultOff.value = false;
             },1000)
           }
         }
@@ -68,10 +66,10 @@ function startRace() {
       // Atların yarışı bitirdikten sonra ilerlemesini sonlandıran koşul.
       if (!controlResultList.value.some((x) => x.id == horseStore.horseList[i].id)) 
       {
-        horseDom._rawValue[i].style.left = parseInt(horseDom._rawValue[i].style.left.split("px")[0]) + horseStore.random(1, 40) + "px";
+        horseDom._rawValue[i].style.left = parseInt(horseDom._rawValue[i].style.left.split("px")[0]) + horseStore.random(1, 10) + "px";
       }
     }
-  }, 100);
+  }, 25);
 }
 
 
@@ -93,12 +91,6 @@ function startRace() {
 
     <div class="list">
       <ActiveResult></ActiveResult>
-      <!-- <p>{{ announcer }}</p> -->
-      <!-- <ol>
-        <li v-for="item in horseStore.raceResult" :key="item">
-          {{ item.name }} 
-        </li>
-      </ol> -->
     </div>
   </template>
   <template v-else>
@@ -109,7 +101,11 @@ function startRace() {
 <style scoped>
 .hippodrome_ground{
   background-image: url("../../assets/horse/ground.jpg");
-  height: 350px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position-x: center;
+  background-position-y: center;
+  height: 500px;
 }
 .container {
   display: grid;
@@ -121,28 +117,28 @@ img {
 }
 
 .horse {
-  margin-top: 25px;
+  margin-top: 40px;
+  z-index: 3;
 }
 .list{
   width: 80%;
-  height: 10%;
+
   margin-top: 1%;
-  background-color: orange;
   margin-left: 10%;
   margin-right: 10%;
   border-radius: 15px;
 }
 
 .final {
+  background-image: url("../../assets/horse/finishLane.png");
   position: absolute;
-  top: 0;
+  top: 5%;
   bottom: 0;
-  width: 3px;
-  background-color: black;
+  width: 55px;
   left: 90%;
   margin-right: 20px;
-  height: 36%;
-  margin-top: 10px;
+  height: 400px;
+  z-index: 1;
 }
 
 .invisibleFinal {
